@@ -1,0 +1,35 @@
+routes:
+  /:
+    controller: channel
+    filter: tag:uvodni
+    template: index
+    order: published_at desc
+
+collections:
+  /fotogalerie/:
+    permalink: /fotogalerie/{slug}/
+    filter: tag:fotogalerie
+    template: gallery
+    order: published_at desc
+
+  /mladez/:
+    permalink: /mladez/{slug}/
+    filter: tag:mladez
+    template: mladez
+    order: published_at desc
+
+  /prispevky-do-veselska/:
+    permalink: /prispevky-do-veselska/{slug}/
+    filter: tag:prispevky-do-veselska
+    template: prispevky-do-veselska
+    order: published_at desc
+
+  /:
+    permalink: /{slug}/
+    filter: tag:-fotogalerie
+    template: index
+    order: published_at desc
+
+taxonomies:
+  tag: /sezona/{slug}/
+  author: /author/{slug}/

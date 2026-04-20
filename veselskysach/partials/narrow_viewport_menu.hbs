@@ -1,0 +1,373 @@
+<div class="nvm">
+  <button id="nvm-btn" class="nvm__toggle" aria-expanded="false" aria-controls="nvm-panel">
+    <img src="{{asset "menu-button4.png"}}" alt="Menu" class="nvm__toggle-img">
+    Menu
+  </button>
+
+  <div id="nvm-panel" class="nvm__panel" hidden>
+    <ul class="nvm__list" id="nvm-list">
+      <li class="nvm__item">
+        <button class="nvm-btn nvm-btn--search" aria-label="Hledat na webu" data-ghost-search>
+          {{> "icons/search"}}
+          <span>Vyhledávání</span>
+        </button>
+      </li>
+
+      <li class="nvm__item"><a class="nvm-btn" href="{{@site.url}}/karel-traxler">Z odkazu Karla Traxlera</a></li>
+      <li class="nvm__item"><a class="nvm-btn" href="https://ovsachy.webnode.cz/proc-hrat-sachy/">Proč hrát šachy</a></li>
+      <li class="nvm__item"><a class="nvm-btn" href="{{@site.url}}/mladez">Mládež</a></li>
+      <li class="nvm__item"><a class="nvm-btn" href="{{@site.url}}/o-nas">O nás</a></li>
+
+      <!-- Triggery pro popupy -->
+      <li class="nvm__item">
+        <button type="button" class="nvm-btn nvm-popup-trigger" data-popup="nvm-results">
+          Výsledky v sezonách – soutěže družstev
+        </button>
+      </li>
+      <li class="nvm__item">
+        <button type="button" class="nvm-btn nvm-popup-trigger" data-popup="nvm-archiv">
+          Příspěvky podle sezon + archiv minulého webu
+        </button>
+      </li>
+
+      <li class="nvm__item"><a class="nvm-btn" href="{{@site.url}}/fotogalerie">Fotogalerie</a></li>
+      <li class="nvm__item"><a class="nvm-btn" href="{{@site.url}}/prispevky-do-veselska">Příspěvky do Veselska</a></li>
+      <li class="nvm__item"><a class="nvm-btn" href="{{@site.url}}/partie">Zajímavé partie</a></li>
+      <li class="nvm__item"><a class="nvm-btn" href="{{@site.url}}/uzitecne-odkazy">Užitečné odkazy</a></li>
+    </ul>
+
+        <!-- Kalendář (uvnitř panelu, ať scrolluje s obsahem) -->
+    <section class="calendar-section calendar--nvm">
+      <h2 class="calendar-title">Kalendář akcí</h2>
+
+      <div class="calendar-wrap">
+        <iframe
+          class="calendar-frame"
+          src="https://calendar.google.com/calendar/embed?src=fucimanms%40outlook.com&ctz=Europe%2FPrague&hl=cs&mode=AGENDA&showTitle=0&showPrint=0&showCalendars=0&showTz=0&showTabs=0&showDate=0&showNav=0"
+          frameborder="0" scrolling="no" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- POPUP: Výsledky po sezonách -->
+  <div class="popup-overlay" id="nvm-results-overlay" hidden></div>
+  <div class="popup-box" id="nvm-results" role="dialog" aria-modal="true" aria-labelledby="nvm-results-title" hidden>
+    <button class="popup-close-btn" aria-label="Zavřít">✕</button>
+    <h2 id="nvm-results-title" class="popup-title">Výsledky v sezonách</h2>
+    <div class="popup-content">
+      <ul id="nvm-results-list" class="nvm-popup-list">
+        {{#foreach @site.navigation}}
+          {{#match this.url prefix="/vysledky-"}}
+            <li><a class="WiderViewportMenu-popup-item" href="{{this.url}}">{{this.label}}</a></li>
+          {{/match}}
+        {{/foreach}}
+      </ul>
+    </div>
+  </div>
+
+
+<!-- POPUP: Příspěvky podle sezon + archiv -->
+<div class="popup-overlay" id="nvm-archiv-overlay" hidden></div>
+<div class="popup-box" id="nvm-archiv" role="dialog" aria-modal="true" aria-labelledby="nvm-archiv-title" hidden>
+  <button class="popup-close-btn" aria-label="Zavřít">✕</button>
+  <h2 id="nvm-archiv-title" class="popup-title">Příspěvky podle sezon</h2>
+  <div class="popup-content">
+
+    <!-- Sezóny (stejně jako v sidebaru) -->
+    <h3 class="popup-subtitle">Sezóny</h3>
+    <ul id="nvm-seasons-list" class="nvm-popup-list nvm-seasons">
+      {{#get "tags" filter="slug:~^'sezona-'" include="count.posts" limit="all" order="slug desc"}}
+        {{#foreach tags}}
+          {{#if count.posts}}
+            <li>
+              <a class="WiderViewportMenu-popup-item" href="{{url}}">
+                {{name}} <span class="badge">({{count.posts}})</span>
+              </a>
+            </li>
+          {{/if}}
+        {{/foreach}}
+      {{/get}}
+      <li class="nvm-empty">Zatím žádné sezony</li>
+    </ul>
+
+  </div>
+</div>
+
+
+
+<style>
+
+:root{
+  --btn-bg: #179b5b;
+  --btn-bg-hover: #18a067;
+  --link-bg: #19bc79;
+  --popup-bg: #c7da15;
+  --accent: #000;
+  --radius: 6px;
+  --shadow: 0 2px 12px rgba(0,0,0,.2);
+
+  /* narrow menu */
+  --nvm-gap: 6px;
+  --nvm-btn-h: 40px;
+  --nvm-btn-py: 8px;
+  --nvm-btn-px: 12px;
+  /* šířku všech tlačítek nastaví JS: */
+  --nvm-btn-w: 100%;
+}
+
+/* ==== Toggle tlačítko ==== */
+.nvm__toggle{
+  display:flex; align-items:center; justify-content:center; gap:8px;
+  width:100%; height:44px; border:none; border-radius: var(--radius);
+  background: var(--btn-bg); color:#fff; font-weight:700; cursor:pointer;
+  box-shadow: inset 0 -2px rgba(0,0,0,.06);
+  transition: background .12s ease, box-shadow .12s ease, transform .06s ease;
+}
+.nvm__toggle:hover,
+.nvm__toggle:focus{ background: var(--btn-bg-hover); box-shadow: inset 0 0 0 2px rgba(0,0,0,.06); }
+.nvm__toggle:active{ transform: translateY(1px); }
+.nvm__toggle-img{ max-height:24px; }
+
+/* ==== Panel ==== */
+.nvm__panel{
+  display:block; margin-top:6px;
+  overflow:hidden;           /* animace výšky */
+  max-height:0; opacity:0;
+  transition: max-height .25s ease, opacity .2s ease;
+  will-change: max-height, opacity;
+}
+.nvm__panel.is-open{
+  max-height: 80vh;
+  opacity: 1;
+  overflow: auto;            /* ⬅ scroll opraven */
+  -webkit-overflow-scrolling: touch;
+}
+.nvm__panel[hidden]{ display:block; } /* kvůli animaci */
+
+.nvm__list{
+  list-style:none; margin:0; padding:0;
+  display:flex; flex-direction:column; gap: var(--nvm-gap);
+}
+
+/* Tlačítka v seznamu */
+.nvm-btn{
+  display:flex; align-items:center; justify-content:center;
+  width: min(var(--nvm-btn-w), 100%);   /* stejné pro všechny, ale nikdy přes 100% */
+  min-height: var(--nvm-btn-h);
+  padding: var(--nvm-btn-py) var(--nvm-btn-px);
+  background: var(--link-bg); color: var(--accent); text-decoration: underline;
+  font-weight:700; border-radius: var(--radius); border:none; cursor:pointer;
+  transition: background-color .12s ease, box-shadow .12s ease, transform .06s ease;
+  line-height: 1.2;
+  white-space: normal;   /* může se zalomit na 2 řádky */
+  text-align: center;
+  margin-inline: auto;   /* zarovnání na střed */
+}
+.nvm-btn:hover,
+.nvm-btn:focus{ background: var(--btn-bg-hover); box-shadow: inset 0 0 0 2px rgba(0,0,0,.06); }
+.nvm-btn:active{ transform: translateY(1px); }
+
+/* Search nahoře */
+.nvm-btn--search{ background:#30c953; }
+.nvm-btn--search:hover,
+.nvm-btn--search:focus{ background:#38d25d; }
+
+/* ==== Popupy (bereš ze stávajícího stylu) ==== */
+.popup-overlay{
+  position: fixed; inset: 0; background: rgba(0,0,0,.55);
+  z-index: 999; display:block;
+}
+.popup-box{
+  position: fixed; top:50%; left:50%; transform: translate(-50%,-50%);
+  background: var(--popup-bg); border-radius: 10px; padding: 28px 18px 18px;
+  z-index: 1000; width: min(92vw, 420px);
+  max-height: 70vh; box-shadow: var(--shadow);
+  display:block;
+}
+.popup-title{ margin: 0 0 8px; font-size: 1.1rem; text-align:center; }
+.popup-close-btn{
+  position:absolute; top:6px; right:8px; border:none; background:transparent;
+  font-size:20px; font-weight:700; color:#000; cursor:pointer;
+}
+.popup-content{
+  display:flex; flex-direction:column; gap:6px;
+  max-height:60vh; overflow:auto; -webkit-overflow-scrolling:touch;
+}
+.nvm-popup-list{ list-style:none; margin:0; padding:0; }
+.WiderViewportMenu-popup-item{
+  display:block; text-align:center; margin:2px;
+  background:#179b5b; color:#000; text-decoration:underline;
+  font-weight:700; border-radius:5px; padding:6px 8px;
+  transition: background-color .12s ease, box-shadow .12s ease;
+}
+.WiderViewportMenu-popup-item:hover{
+  background:#ebbb2b; box-shadow:0 0 0 2px rgba(0,0,0,.06) inset;
+}
+/* Skrytí přes hidden atribut */
+[hidden].popup-overlay, [hidden].popup-box{ display:none !important; }
+
+/* ==== Kalendář uvnitř panelu ==== */
+:root{
+  --cal-height-mobile: 360px;
+  --cal-radius: 8px;
+}
+.calendar--nvm{ margin:14px 0 10px; }
+.calendar-title{ margin:0 0 8px; font-size:1.1rem; font-weight:700; text-align:center; }
+.calendar-wrap{
+  position:relative; width:100%;
+  height:var(--cal-height-mobile);
+  border-radius:var(--cal-radius);
+  overflow:hidden;
+  box-shadow:0 2px 12px rgba(0,0,0,.12);
+  background:#c7da15;
+}
+.calendar-frame{ position:absolute; inset:0; width:100%; height:100%; border:0; }
+
+/* Subtitly v popupu */
+.popup-subtitle{
+  margin: 8px 0 6px;
+  font-size: .95rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+/* Fallback „Zatím žádné sezony“ jen když je seznam prázdný */
+.nvm-seasons .nvm-empty{ display:block; opacity:.85; }
+.nvm-seasons:has(li:not(.nvm-empty)) .nvm-empty{ display:none; }
+/* starší prohlížeče – záložní varianta */
+.nvm-seasons li:not(.nvm-empty) ~ .nvm-empty{ display:none; }
+
+/* Malý badge jako na sidebaru */
+.WiderViewportMenu-popup-item .badge{
+  margin-left:.35em; font-size:.95em; opacity:.85;
+}
+
+/* Více místa u dna scrollu v popupu */
+.popup-content{
+  padding-bottom: 12px;                         /* základní mezera */
+  padding-bottom: calc(12px + env(safe-area-inset-bottom)); /* iOS safe-area bonus */
+}
+</style>
+
+<script>
+(() => {
+  // Toggle narrow panel
+  const btn = document.getElementById('nvm-btn');
+  const panel = document.getElementById('nvm-panel');
+
+  function setOpen(open){
+    panel.hidden = false;
+    panel.classList.toggle('is-open', open);
+    btn.setAttribute('aria-expanded', String(open));
+    if (!open) setTimeout(() => { panel.hidden = true; }, 260);
+  }
+
+  btn?.addEventListener('click', () => {
+    const willOpen = !panel.classList.contains('is-open');
+    setOpen(willOpen);
+    if (willOpen) {
+      // přepočítej šířky po otevření (jistota po načtení fontů)
+      requestAnimationFrame(measureButtonsWidth);
+    }
+  });
+
+  // Jednotná šířka tlačítek podle nejdelšího textu
+  function measureButtonsWidth(){
+    const buttons = panel.querySelectorAll('.nvm-btn');
+    if (!buttons.length) return;
+
+    let max = 0;
+    // měříme v "max-content"
+    buttons.forEach(el => {
+      const prev = el.style.width;
+      el.style.width = 'max-content';
+      const w = Math.ceil(el.getBoundingClientRect().width);
+      if (w > max) max = w;
+      el.style.width = prev;
+    });
+
+    // nastavíme proměnnou (clamp na 100% řeší CSS)
+    panel.style.setProperty('--nvm-btn-w', max + 'px');
+  }
+
+  // Popupy
+  const popupMap = {
+    'nvm-results': {
+      overlay: document.getElementById('nvm-results-overlay'),
+      box:     document.getElementById('nvm-results'),
+    },
+    'nvm-archiv': {
+      overlay: document.getElementById('nvm-archiv-overlay'),
+      box:     document.getElementById('nvm-archiv'),
+    }
+  };
+  let lastTrigger = null;
+
+  function openPopup(id, trigger){
+    const m = popupMap[id]; if (!m) return;
+    lastTrigger = trigger || null;
+    m.overlay.hidden = false; m.box.hidden = false;
+    document.body.style.overflow = 'hidden';
+    // focus první odkaz
+    const focusable = m.box.querySelector('a,button,[tabindex]:not([tabindex="-1"])');
+    (focusable || m.box).focus?.();
+
+    // přehodit pořadí výsledků jen jednou
+    if (id === 'nvm-results') reverseListById('nvm-results-list');
+  }
+  function closePopup(id){
+    const m = popupMap[id]; if (!m) return;
+    m.overlay.hidden = true; m.box.hidden = true;
+    document.body.style.overflow = '';
+    lastTrigger?.focus?.(); lastTrigger = null;
+  }
+
+  document.querySelectorAll('.nvm-popup-trigger').forEach(t => {
+    t.addEventListener('click', () => openPopup(t.dataset.popup, t));
+  });
+  Object.entries(popupMap).forEach(([id, m]) => {
+    m.overlay.addEventListener('click', () => closePopup(id));
+    m.box.querySelector('.popup-close-btn')?.addEventListener('click', () => closePopup(id));
+    m.box.addEventListener('keydown', e => { if (e.key === 'Escape') closePopup(id); });
+    m.box.addEventListener('click', e => {
+      const a = e.target.closest('a');
+      if (a) closePopup(id);
+    });
+  });
+
+  // Otočení <li> podle desktopu (jen výsledky)
+  function reverseListById(id){
+    const ul = document.getElementById(id);
+    if (!ul || ul.dataset.reversed === '1') return;
+    const items = Array.from(ul.children);
+    const frag = document.createDocumentFragment();
+    for (let i = items.length - 1; i >= 0; i--) frag.appendChild(items[i]);
+    ul.appendChild(frag);
+    ul.dataset.reversed = '1';
+    ul.scrollTop = 0;
+  }
+
+  // Inity
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+      // široké tlačítko hned po načtení
+      measureButtonsWidth();
+    });
+  } else {
+    measureButtonsWidth();
+  }
+
+  // Reflow při změně šířky – s debounce
+  let rAF = null;
+  window.addEventListener('resize', () => {
+    if (rAF) cancelAnimationFrame(rAF);
+    rAF = requestAnimationFrame(() => {
+      measureButtonsWidth();
+      rAF = null;
+    });
+  });
+})();
+
+</script>

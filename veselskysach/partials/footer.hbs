@@ -1,0 +1,92 @@
+<footer class="site-footer">
+  <div class="footer-inner">
+    <!-- horní řada: vlevo kontakty, vpravo admin -->
+    <div class="footer-grid">
+      <div class="footer-content">
+        <p>Kontaktní údaje:</p>
+        <ul>
+          <li>Adresa klubu: Podhájek 60, 391 81 Veselí nad Lužnicí</li>
+          <li>Klubovna ŠK je v domě dětí a mládeže</li>
+          <li>Email: l.sykora@volny.cz</li>
+          <li>Telefon: +420 724040059</li>
+        </ul>
+      </div>
+
+      <div class="footer-right">
+        <p class="footer-admin">
+          Admin support webu:
+          <a href="mailto:fuciman13@seznam.cz">fuciman13@seznam.cz</a>
+          <br>(Ondřej Fuciman)
+        </p>
+      </div>
+    </div>
+
+    <!-- spodní řada: vlevo copyright, vpravo powered -->
+    <div class="footer-meta">
+      <span class="copyright">
+        <a href="{{@site.url}}">{{@site.title}}</a> &copy; {{date format="YYYY"}}
+      </span>
+      <p class="footer-powered">
+        <a href="https://ghost.org/" target="_blank" rel="noopener">Powered by Ghost</a>
+      </p>
+    </div>
+  </div>
+</footer>
+
+<style>
+/* podklad */
+.site-footer{
+  background:#e2e2e2;
+  color:#555;
+  margin-top:20px;
+  border-top:1px solid rgba(0,0,0,.06);
+}
+.site-footer a{ color:#555; text-decoration:underline; }
+
+/* roztáhnout skoro na plnou šířku + malé vnitřní okraje */
+.site-footer .footer-inner{
+  width:100%;
+  max-width:none;                         /* ⬅ zruší 1100px limit */
+  margin:0 auto;
+  padding:14px clamp(10px, 2.5vw, 22px);  /* blíž k okrajům viewportu */
+}
+
+/* horní řada: 2 sloupce, pravý zarovnán k okraji */
+.footer-grid{
+  display:grid;
+  grid-template-columns: 1fr auto;
+  gap:16px clamp(12px, 2vw, 24px);
+  align-items:start;                      /* vpravo admin nahoře */
+}
+.footer-content p{ margin:0 0 8px; font-weight:700; }
+.footer-content ul{ list-style:none; padding:0; margin:0; }
+.footer-content li{ margin:0 0 4px; }
+
+.footer-right{ text-align:right; }
+.footer-admin{ margin:0; }
+
+/* spodní řada: copyright vlevo, powered úplně vpravo dole */
+.footer-meta{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-end;
+  gap:12px;
+  margin-top:10px;
+  padding-top:10px;
+  border-top:1px solid rgba(0,0,0,.08);
+}
+.copyright a{ color:#333; }
+.footer-powered{ margin:0; opacity:.9; }
+
+@media (max-width: 640px){
+  .footer-grid{
+    grid-template-columns: 1fr;           /* pod sebe na mobilu */
+  }
+  .footer-right{ text-align:left; }
+  .footer-meta{
+    flex-direction:column;
+    align-items:flex-start;               /* ať je to čitelné vlevo */
+    gap:6px;
+  }
+}
+</style>

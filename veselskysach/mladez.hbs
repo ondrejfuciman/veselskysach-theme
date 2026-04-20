@@ -1,0 +1,17 @@
+{{!< default}}
+
+<main class="site-main center-wrap center-wrap--narrow">
+  <article class="article">
+    <header class="article-header gh-canvas">
+      <h1 class="article-title">Příspěvky k aktivitám naší mládeže</h1>
+    </header>
+
+    <section class="post-feed">
+      {{#foreach posts}}
+        {{> "post-card"}}
+      {{/foreach}}
+    </section>
+
+    {{pagination}}
+  </article>
+</main>

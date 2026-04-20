@@ -1,0 +1,124 @@
+{{!< default}}
+
+{{#post}}
+
+<main id="site-main" class="site-main">
+  <article class="article {{post_class}}">
+
+    <header class="article-header gh-canvas">
+
+      <div class="article-tag post-card-tags">
+        {{#primary_tag}}
+          <span class="post-card-primary-tag">
+            <a href="{{url}}">{{name}}</a>
+          </span>
+        {{/primary_tag}}
+        {{#if featured}}
+          <span class="post-card-featured">{{> "icons/fire"}} Featured</span>
+        {{/if}}
+      </div>
+
+      <h1 class="article-title">{{title}}</h1>
+
+      {{#if custom_excerpt}}
+        <p class="article-excerpt">{{custom_excerpt}}</p>
+      {{/if}}
+
+      <div class="article-byline">
+        <section class="article-byline-content">
+          <ul class="author-list">
+            {{#foreach authors}}
+              <li class="author-list-item">
+                {{#if profile_image}}
+                  <a href="{{url}}" class="author-avatar">
+                    <img class="author-profile-image" src="{{img_url profile_image size="xs"}}" alt="{{name}}" />
+                  </a>
+                {{else}}
+                  <a href="{{url}}" class="author-avatar author-profile-image">{{> "icons/avatar"}}</a>
+                {{/if}}
+              </li>
+            {{/foreach}}
+          </ul>
+
+          <div class="article-byline-meta">
+            <h4 class="author-name">{{authors}}</h4>
+            <div class="byline-meta-content">
+              <time class="byline-meta-date" datetime="{{date format="YYYY-MM-DD"}}">{{date}}</time>
+              {{#if reading_time}}
+                <span class="byline-reading-time"><span class="bull">&bull;</span> {{reading_time}}</span>
+              {{/if}}
+            </div>
+          </div>
+        </section>
+      </div>
+
+      {{!-- ZDE UŽ NENÍ ŽÁDNÝ FEATURE IMAGE BLOK --}}
+    </header>
+
+    <section class="gh-content gh-canvas">
+      {{content}}
+    </section>
+
+    {{#if comments}}
+      <section class="article-comments gh-canvas">
+        {{comments}}
+      </section>
+    {{/if}}
+
+    <style>
+      /* ===== Detail článku (bez feature image) ===== */
+
+      .site-main{
+        margin: 50px auto 0;
+        width: 100%;
+        max-width: 800px;
+        padding-inline: clamp(8px, 3vw, 20px);
+      }
+
+      .article{ margin-bottom: 50px; }
+      .article-header{ margin-bottom: 40px; padding-bottom: 30px; border-bottom: 1px solid #ccc; }
+      .article-tag{ margin-bottom: 10px; }
+
+      /* Štítky stejné jako na kartě */
+      .post-card-primary-tag{
+        background-color:#007acc; color:#fff; padding:5px 10px;
+        border-radius:20px; font-size:14px; font-weight:600;
+      }
+      .post-card-featured{
+        background-color:#ff5722; color:#fff; padding:5px 10px;
+        border-radius:20px; font-size:14px; font-weight:600;
+      }
+
+      /* Titulek + excerpt */
+      .article-title{ margin:0 0 20px; font-size:36px; font-weight:700; }
+      .article-excerpt{ margin:0 0 30px; font-size:18px; line-height:1.4; }
+
+      /* Byline / autoři */
+      .author-list{ display:flex; list-style:none; margin:0; padding:0; }
+      .author-list-item{ margin-right:10px; }
+      .author-avatar{ display:block; width:50px; height:50px; border-radius:50%; overflow:hidden; }
+      .author-profile-image{ width:100%; height:100%; object-fit:cover; }
+      .author-name{ margin:0 0 5px; font-size:16px; font-weight:600; }
+      .byline-meta-date, .byline-reading-time{ font-size:16px; color:#999; }
+
+      /* Obsah – pojistky proti přetékání */
+      .gh-content{ min-width:0; }
+      .gh-content pre{ overflow:auto; max-width:100%; white-space:pre-wrap; }
+      .gh-content code{ white-space:pre-wrap; }
+      .gh-content table{ display:block; max-width:100%; overflow-x:auto; }
+      .gh-content img{ max-width:100%; height:auto; display:block; }
+      .gh-content iframe{
+        display:block;
+        width:100%;
+        max-width:100%;
+        min-height:520px;
+        height:clamp(520px, 70vh, 900px);
+        border:0;
+        margin:24px auto;
+      }
+    </style>
+
+  </article>
+</main>
+
+{{/post}}

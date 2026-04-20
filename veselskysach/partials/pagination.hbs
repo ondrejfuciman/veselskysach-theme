@@ -1,0 +1,11 @@
+<nav class="pagination" role="navigation" aria-label="Stránkování">
+  {{#if prev}}
+    <a class="page-prev" href="{{page_url prev}}" rel="prev" aria-label="Novější">← Novější</a>
+  {{/if}}
+
+  <span class="page-status">Strana {{page}} / {{pages}}</span>
+
+  {{#if next}}
+    <a class="page-next" href="{{page_url next}}" rel="next" aria-label="Starší">Starší →</a>
+  {{/if}}
+</nav>

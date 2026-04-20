@@ -1,0 +1,75 @@
+{{!-- partials/post-card.hbs --}}
+<article class="post-card {{post_class}}{{#match @custom.feed_layout "Classic"}}{{#is "home"}}{{#has index="0"}} post-card-large{{/has}}{{#has index="1,2"}} dynamic{{/has}}{{/is}}{{/match}}{{#match @custom.feed_layout "Grid"}} keep-ratio{{/match}}{{#match @custom.feed_layout "List"}}{{#is "home, paged"}} post-card-large{{/is}}{{/match}}{{#unless access}} post-access-{{visibility}}{{/unless}}">
+
+    {{!-- ⬇️ ÚPLNĚ BEZ FEATURE IMAGE – nic se tu nevyrenderuje --}}
+    {{!-- (původní {{#if feature_image}}…{{/if}} blok je pryč) --}}
+
+    <div class="post-card-content">
+        <a class="post-card-content-link" href="{{url}}">
+            <header class="post-card-header">
+                <div class="post-card-tags">
+                    {{#primary_tag}}
+                        <span class="post-card-primary-tag">{{name}}</span>
+                    {{/primary_tag}}
+                    {{#if featured}}
+                        <span class="post-card-featured">{{> "icons/fire"}} Featured</span>
+                    {{/if}}
+                </div>
+                <h2 class="post-card-title">
+                    {{#unless access}}
+                    {{^has visibility="public"}}
+                        {{#unless feature_image}}
+                            {{> "icons/lock"}}
+                        {{/unless}}
+                    {{/has}}
+                    {{/unless}}
+                    {{title}}
+                </h2>
+            </header>
+
+            {{#if custom_excerpt}}
+              <div class="post-card-excerpt">{{custom_excerpt}}</div>
+            {{else}}
+              <div class="post-card-excerpt">{{excerpt words="28"}}</div>
+            {{/if}}
+        </a>
+
+        <footer class="post-card-meta">
+            <time class="post-card-meta-date" datetime="{{date format="YYYY-MM-DD"}}">{{date}}</time>
+            {{#if reading_time}}
+                <span class="post-card-meta-length">{{reading_time}}</span>
+            {{/if}}
+            {{#if @site.comments_enabled}}
+                {{comment_count}}
+            {{/if}}
+        </footer>
+    </div>
+
+<style>
+/* ===== Post card (textová verze) ===== */
+.post-card{
+  display:flex; flex-direction:column;
+  background:#f2f2f2; border-radius:8px; padding:7px; width:100%;
+}
+
+.post-card-title{ margin:10px 0; font-size:20px; }
+.post-card-title a{ text-decoration:none; color:#000; }
+.post-card-title a:hover{ text-decoration:underline; }
+.post-card-excerpt{ font-size:16px; line-height:1.5; margin:0; color:#000; }
+.post-card-meta-date{ color:gray; }
+
+/* Štítky */
+.post-card-primary-tag{
+  background-color:#007acc; color:#fff; padding:5px 10px;
+  border-radius:20px; font-size:14px; font-weight:600;
+}
+.post-card-featured{
+  background-color:#ff5722; color:#fff; padding:5px 10px;
+  border-radius:20px; font-size:14px; font-weight:600;
+}
+
+/* Jednosloupcový feed přes celou šířku */
+.post-feed{ display:block; }
+.post-feed > .post-card{ width:100%; margin:0 0 20px; }
+</style>
+</article>

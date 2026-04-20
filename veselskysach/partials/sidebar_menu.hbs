@@ -1,0 +1,244 @@
+<nav class="sidebar-menu" aria-label="Hlavní menu">
+  <ul class="menu">
+
+    <li class="menu-item">
+      <button class="search-button" aria-label="Hledat na webu" data-ghost-search>
+        {{> "icons/search"}}
+      </button>
+    </li>
+
+    <li class="menu-item">
+      <a href="{{@site.url}}/mladez">Mládež</a>
+    </li>
+
+    <!-- Výsledky v sezonách – flyout -->
+    <li class="menu-item has-submenu">
+      <button class="submenu-trigger" type="button">
+        Výsledky v sezonách <br>(soutěže družstev)
+      </button>
+      <img src="{{asset "right-arrow1.png"}}" alt="" />
+      <ul id="submenu-results" class="submenu">
+        {{#foreach @site.navigation}}
+          {{#match this.url prefix="/vysledky-"}}
+            <li><a class="submenu-link" href="{{this.url}}">{{this.label}}</a></li>
+          {{/match}}
+        {{/foreach}}
+      </ul>
+
+    </li>
+
+    <!-- Příspěvky podle sezon – flyout -->
+    <li class="menu-item has-submenu">
+      <button class="submenu-trigger" type="button">
+        Příspěvky podle sezon <br>+ archiv minulého webu
+      </button>
+      <img src="{{asset "right-arrow1.png"}}" alt="" />
+      <ul id="submenu-seasons" class="submenu submenu--seasons">
+        {{#get "tags" filter="slug:~^'sezona-'" include="count.posts" limit="all" order="slug desc"}}
+          {{#foreach tags}}
+            {{#if count.posts}}
+              <li>
+                <a class="submenu-link" href="{{url}}">
+                  {{name}} <span class="badge">({{count.posts}})</span>
+                </a>
+              </li>
+            {{/if}}
+          {{/foreach}}
+        {{/get}}
+        <li class="submenu-empty">Zatím žádné sezony</li>
+      </ul>
+
+    </li>
+    
+    <li class="menu-item"><a href="{{@site.url}}/fotogalerie">Fotogalerie</a></li>
+    <li class="menu-item"><a href="{{@site.url}}/prispevky-do-veselska">Příspěvky do Veselska</a></li>
+    <li class="menu-item"><a href="{{@site.url}}/zajimave-partie">Zajímavé partie</a></li>
+    <li class="menu-item"><a href="{{@site.url}}/uzitecne-odkazy">Užitečné odkazy</a></li>
+
+  </ul>
+</nav>
+
+<script>
+(() => {
+  function reverseListById(id){
+    const ul = document.getElementById(id);
+    if (!ul || ul.dataset.reversed === '1') return;
+
+    const items = Array.from(ul.children);
+    if (!items.length) return;
+
+    const frag = document.createDocumentFragment();
+    for (let idx = items.length - 1; idx >= 0; idx--) {
+      frag.appendChild(items[idx]);
+    }
+    ul.appendChild(frag);
+
+    ul.dataset.reversed = '1';
+    ul.scrollTop = 0; // vždy nahoře
+  }
+
+  // Spusť jednou po načtení DOM
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => reverseListById('submenu-results'));
+  } else {
+    reverseListById('submenu-results');
+  }
+})();
+</script>
+
+<style>
+.submenu--seasons{ overflow-anchor: none; }
+
+/* Fallback je defaultně vidět… */
+.submenu--seasons .submenu-empty{ display:block; opacity:.8; }
+
+/* …ale schovej ho, pokud <ul> obsahuje aspoň jeden skutečný <li> */
+.submenu--seasons:has(li:not(.submenu-empty)) .submenu-empty{ display:none; }
+
+/* Pro starší prohlížeče: záložní varianta (když by :has nebylo) */
+.submenu--seasons li:not(.submenu-empty) ~ .submenu-empty{ display:none; }
+</style>
+
+
+
+<style>
+/* === Proměnné – zachován tvůj vzhled === */
+:root{
+  --sidebar-width: 260px;
+  --flyout-gap: 5px;          /* vizuální mezera mezi šipkou a panelem */
+  --flyout-bridge: 26px;      /* neviditelný most (≥ šířka šipky + mezery) */
+
+  --flyout-fade-in: 100ms;    /* ⚡ náběh (vizuální) */
+  --flyout-fade-out: 200ms;  /* 🕯️ dohasínání (vizuální) */
+
+  /* mezera mezi levým sloupcem a středem layoutu (0 = žádná navíc) */
+  --layout-gap-x: 0px;
+}
+
+/* === Layout sidebaru – žádná extra mezera do středu === */
+.sidebar-menu{ position: relative; z-index: 30; }
+.menu{
+  list-style: none; margin: 0; padding: 0;
+  width: var(--sidebar-width);     /* pevně podle tvého sidebaru */
+  overflow: visible;
+}
+
+/* (volitelné) když ovládáš layout přes .main-container: */
+.main-container{ gap: var(--layout-gap-x) !important; }
+.left-scrolling-element{
+  flex: 0 0 var(--sidebar-width);   /* žádné natahování ani rezerva navíc */
+  width: var(--sidebar-width);
+}
+
+/* === Položky a triggery – zachovaný vzhled === */
+.menu-item{
+  position: relative; display: flex; align-items: center; gap: 8px;
+  margin: 2px 0; transform-origin: left center; overflow: visible;
+}
+.menu-item > a,
+.menu-item > .submenu-trigger{
+  display: flex; align-items: center; width: 210px;
+  font-family: Cambria, Georgia, serif; font-weight: 700; font-size: 16px;
+  color: #000; text-decoration: underline; background:#179b5b;
+  border-radius: 5px; padding: 6px 8px; border: none; text-align: left;
+  transition: background-color .12s ease, box-shadow .12s ease;
+  cursor: pointer;
+}
+.menu-item > a:hover,
+.menu-item > a:focus,
+.menu-item > .submenu-trigger:hover,
+.menu-item > .submenu-trigger:focus{
+  background:#18a067; box-shadow:0 0 0 2px rgba(0,0,0,.06) inset;
+}
+
+/* Šipka reaguje jen na hover/focus triggeru */
+.menu-item img{
+  height: 20px; margin-left: 8px; pointer-events: none;
+  transition: transform .2s, opacity .2s;
+}
+.menu-item > .submenu-trigger:hover + img,
+.menu-item > .submenu-trigger:focus + img,
+.menu-item > a:hover + img,
+.menu-item > a:focus + img{
+  transform: translateX(5px); opacity: .85;
+}
+
+/* === Flyout overlay – zachovaný design + neviditelný most === */
+.menu-item .submenu{
+  position: absolute; top: 0;
+  left: calc(100% + var(--flyout-gap));   /* vizuální mezera zůstává 5px */
+  list-style: none; margin: 0; padding: 8px;
+  min-width: 300px; max-width: 360px; max-height: 60vh; overflow: auto;
+  background:#c7da15; border-radius: 6px; box-shadow: 0 2px 12px rgba(0,0,0,.2);
+
+  /* výchozí stav (zavřeno) – jen vizuální fade */
+  opacity: 0; visibility: hidden; pointer-events: none; transform: translateY(4px);
+  transition-property: opacity, transform, visibility;
+  transition-timing-function: ease, ease, linear;
+  transition-duration: var(--flyout-fade-out), var(--flyout-fade-out), 0s;
+  transition-delay: 0s, 0s, var(--flyout-fade-out);
+}
+
+/* otevření (hover/focus) – rychlý náběh */
+.menu-item:hover > .submenu,
+.menu-item:focus-within > .submenu{
+  opacity: 1; visibility: visible; pointer-events: auto; transform: translateY(0);
+  transition-duration: var(--flyout-fade-in), var(--flyout-fade-in), 0s;
+  transition-delay: 0s, 0s, 0s;
+}
+
+/* MOST z panelu směrem doleva – kryje víc než pouhý gap */
+.menu-item .submenu::before{
+  content: "";
+  position: absolute;
+  left: calc(-1 * var(--flyout-bridge));  /* zasahuje přes šipku i mezeru */
+  width: var(--flyout-bridge);
+  top: -8px; bottom: -8px;
+}
+
+/* MOST z triggeru směrem doprava – aktivní jen při hoveru/focusu */
+.menu-item::after{ content: none; }
+.menu-item:hover::after,
+.menu-item:focus-within::after{
+  content: "";
+  position: absolute;
+  left: 100%;                /* naváže hned na pravý okraj položky */
+  width: var(--flyout-bridge);
+  top: -8px; bottom: -8px;
+}
+
+/* Linky ve flyoutu – zachován vzhled */
+.submenu > li > a{
+  display:block; text-align:center; margin:2px;
+  background:#179b5b; color:#000; text-decoration:underline;
+  font-weight:700; border-radius:5px; padding:6px 8px;
+  transition: background-color .12s ease, box-shadow .12s ease;
+}
+.submenu > li > a:hover{
+  background-color:#ebbb2b; box-shadow:0 0 0 2px rgba(0,0,0,.06) inset;
+}
+
+/* (volitelné) jemné zvětšení celé položky – jen vizuální, nehraje do šířky layoutu */
+@supports selector(:has(*)) {
+  .menu-item:has(> .submenu-trigger:hover),
+  .menu-item:has(> .submenu-trigger:focus),
+  .menu-item:has(> a:hover),
+  .menu-item:has(> a:focus){
+    transform: scale(1.03);
+    transition: transform .15s ease;
+  }
+}
+
+
+.search-button {
+    background-color: #aef2b6;
+    border: none;
+    padding: 5px 15px;
+    width: 255px;
+    display: block;
+    text-align: center;
+    border-radius: 5px;
+    margin-bottom: 1px;
+    margin-top: 1px;
+  }
+</style>

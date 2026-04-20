@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="{{@site.locale}}"{{#match @custom.color_scheme "Dark"}} class="dark-mode"{{else match @custom.color_scheme "Auto"}} class="auto-color"{{/match}}>
+<head>
+
+    {{!-- Basic meta - advanced meta is output with {ghost_head} below --}}
+    <title>{{meta_title}}</title>
+    
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    {{!-- Theme assets - use the {asset} helper to reference styles & scripts,
+    this will take care of caching and cache-busting automatically --}}
+    
+    
+
+    {{!-- This tag outputs all your advanced SEO meta, structured data, and other important settings,
+    it should always be the last tag before the closing head tag --}}
+    {{ghost_head}}
+
+</head>
+<body class="{{body_class}} is-head-{{#match @custom.navigation_layout "Logo on cover"}}left-logo{{else match @custom.navigation_layout "Logo in the middle"}}middle-logo{{else}}stacked{{/match}}{{#match @custom.title_font "=" "Elegant serif"}} has-serif-title{{/match}}{{#match @custom.body_font "=" "Modern sans-serif"}} has-sans-body{{/match}}{{#if @custom.show_publication_cover}} has-cover{{/if}}">
+
+<div class="viewport">
+
+  <header id="gh-head" class="gh-head outer{{#match @custom.header_style "Hidden"}} is-header-hidden{{/match}}">
+    <div class="header-content">
+      <div class="left-image">
+        {{> "brand-badge"}}
+      </div>
+      <div class="right-image">
+      {{#if @custom.header_right_image}}
+        <img src="{{@custom.header_right_image}}"
+            alt="{{#if @custom.header_right_alt}}{{@custom.header_right_alt}}{{else}}Titulní fotka vpravo{{/if}}"
+            class="header-image-mobile">
+      {{else}}
+        <img src="{{asset "NavrhNaTitulniFoto4.jpg"}}"
+            alt="Titulní fotka 1"
+            class="header-image-mobile">
+      {{/if}}
+    </div>
+      <div class="header-title">
+        <h1>Traxler Veselí nad Lužnicí</h1>
+      </div>
+  </div>
+
+    <div class="home-button">
+      <a href="{{@site.url}}">Hlavní stránka</a>
+    </div>
+      
+    {{> "narrow_viewport_menu"}}
+  </header>
+
+<style> 
+/* jen levý obrázek v headeru */
+.left-image .header-image-mobile{
+  display:block;
+  /* zaobli JEN spodní rohy – elipticky, ať to nevypadá jako „půlkruh“ */
+  border-radius: 0 0 50% 50% / 0 0 45% 45%;
+  /* volitelně: mírný rámeček, ať vynikne tvar */
+  /* outline: 2px solid #c7da15; outline-offset:-2px; */
+}
+
+
+  .header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #c7da15;
+}
+
+.right-image img{
+  width: auto;
+  height: auto;
+  object-fit: cover;         /* když budeš chtít vyplnit box: použij místo toho height + width + cover */
+}
+
+
+.right-image {
+  order: 3;
+  margin-right: 20px;
+}
+
+.left-image {
+  order: 1;
+  margin-left: 20px;
+}
+
+.header-title {
+  order: 2;
+  flex-grow: 1;
+  text-align: center;
+}
+
+.home-button {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  width: 100%; 
+}
+
+.home-button a {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  text-decoration: underline;
+  color: black;
+  font-weight: bold;
+  font-size: large;
+  background-color:#15da8e;
+  width:33.33rem;
+  height: 30px;
+  border-radius: 3px;
+}
+
+@media (max-width: 768px) {
+  .header-content {
+    flex-direction: column;
+    height: auto;
+    align-items: center;      /* centrování dětí ve flexu */
+    gap: 12px;
+    min-height: auto;
+    padding-block: 10px;
+    padding-inline: clamp(8px, 4vw, 16px); /* symetrické vnitřní okraje */
+  }
+  
+  .header-image-mobile {
+    display: none;
+    
+  }
+  
+  .left-image img,
+  .right-image img {
+    max-width: 100%;
+    width: auto;
+    
+  }
+}
+
+@media (min-width: 769px) {
+    .NarrowViewportMenu-dropdown {
+      display: none;
+      opacity: 0;
+      transition: opacity 0.3s ease; /* Add a transition effect */
+    }
+  }
+
+/* Mobilní menu jen do 768 px */
+@media (min-width: 769px){
+  .nvm,
+  .NarrowViewportMenu-dropdown{ display:none !important; }
+}
+
+/* Desktopový sidebar schovej na mobilu (pro jistotu) */
+@media (max-width: 768px){
+  .sidebar-menu{ display:none !important; }
+}
+
+
+  /* Display the container with full opacity on screens 768px or smaller */
+  @media (max-width: 768px) {
+    .NarrowViewportMenu-dropdown {
+      display: block;
+      opacity: 1;
+    }
+  }
+
+
+  /* ===== Header (fluid) ===== */
+
+.header-content{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap: clamp(12px, 2vw, 24px);
+  /* žádná fixní výška – plynulé minimum/max */
+  min-height: clamp(120px, 18vw, 210px);
+  padding-block: clamp(6px, 1vw, 12px);
+  background-color:#c7da15;
+}
+
+/* Levý blok s odznakem (SVG) */
+.left-image{ display:flex; align-items:center; margin-left:20px; }
+.left-image .brand-badge{
+  /* šířka = výška; SVG si udrží poměr samo */
+  width: clamp(120px, 14vw, 190px);
+  height: auto;
+  display:block;
+  filter: drop-shadow(0 2px 10px rgba(0,0,0,.12));
+}
+
+/* Pravý obrázek */
+.right-image{ display:flex; align-items:center; margin-right:20px; }
+.right-image img{
+  /* plynule mezi 110–168 px podle viewportu */
+  max-height: clamp(110px, 14vw, 168px);
+  width: auto;
+  height: auto;
+  object-fit: cover;
+}
+
+/* Titulek uprostřed */
+.header-title{
+  flex:1 1 auto;
+  text-align:center;
+}
+.header-title h1{
+  margin:0;
+  font-weight:800;
+  line-height:1.1;
+  /* plynulá typografie */
+  font-size: clamp(18px, 2.3vw, 36px);
+}
+
+/* Home button pod headerem – beze změny, jen kosmetika */
+.home-button{
+  position:relative;
+  display:flex;
+  justify-content:center;
+  width:100%;
+}
+.home-button a{
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  text-align:center;
+  text-decoration:underline;
+  color:black;
+  font-weight:bold;
+  font-size:clamp(14px, 1.3vw, 18px);
+  background-color:#15da8e;
+  width:33.33rem;
+  height:30px;
+  border-radius:3px;
+}
+
+/* Mobile: na malých šířkách můžeš schovat pravý obrázek, odznak nechat (doporučuji) */
+@media (max-width: 768px){
+  .header-content{
+    flex-direction:column;
+    align-items:center;
+    gap:12px;
+    min-height:auto;           /* dovol smrštění */
+    padding-block:10px;
+  }
+  .right-image img{ display:none; } /* skryj pravý obrázek na mobilu */
+  /* pokud chceš schovat i odznak: .left-image .brand-badge{ display:none; } */
+}
+
+/* (Volitelné) extra velké monitory – trochu omez růst */
+@media (min-width: 1600px){
+  .header-content{ padding-block: 16px; }
+  .left-image .brand-badge{ width: 180px; }
+  .right-image img{ max-height: 168px; }
+}
+
+</style>
+
+<main class="main-container">           
+  <aside class="left-scrolling-element">
+
+    <!-- === Horní box v levém sloupci (původně right-scrolling-element) === -->
+    <div class="Traxler-wrapper">
+      <div class="Traxler-link">
+        <a href="{{@site.url}}/karel-traxler">Z odkazu pátera Karla Traxlera</a>
+      </div> 
+      <div class="Traxler-photo">
+        <img src="{{asset "kareltraxler.jpg"}}" alt="Karel Traxler">
+      </div> 
+    </div>
+
+    <div class="Info-links">          
+      <div class="Motivation-info">
+        <a href="https://ovsachy.webnode.cz/proc-hrat-sachy/">Proč hrát šachy</a>
+      </div>
+      <div class="Club-info">
+        <a href="{{@site.url}}/o-nas">O nás</a>
+      </div>          
+    </div>
+
+    <!-- === Sidebar menu pod tím === -->
+    {{> "sidebar_menu"}}
+
+    {{> "calendar"}}
+  </aside>
+
+  <div class="center-aligned-element">
+    <div class="site-content">
+      {{!-- All other templates get inserted here, index.hbs, post.hbs, etc --}}
+      {{{body}}}
+    </div>
+  </div> 
+</main>
+    
+
+    {{!-- The global footer at the very bottom of the screen --}}
+    {{> "footer"}}
+</div>
+
+{{!-- Scripts - handle member signups, responsive videos, infinite scroll, floating headers, and galleries --}}
+
+<!-- LIGHTBOX OVERLAY -->
+<div id="lb" class="lb" aria-hidden="true">
+  <button class="lb__close" aria-label="Zavřít">✕</button>
+  <button class="lb__nav lb__prev" aria-label="Předchozí">&#10094;</button>
+  <figure class="lb__stage">
+    <img class="lb__img" alt="">
+    <figcaption class="lb__cap" aria-live="polite"></figcaption>
+  </figure>
+  <button class="lb__nav lb__next" aria-label="Další">&#10095;</button>
+</div>
+
+<style>
+/* ===== Lightbox – vzhled ===== */
+.lb{
+  position: fixed; inset: 0; z-index: 9999;
+  display: none; /* JS přepne na flex */
+  align-items: center; justify-content: center; gap: 12px;
+  background: rgba(0,0,0,.92);
+}
+.lb--open{ display: flex; }
+.lb__stage{ margin:0; max-width: 92vw; max-height: 92vh; display:flex; flex-direction:column; align-items:center; gap:10px; }
+.lb__img{ max-width: 92vw; max-height: 80vh; width:auto; height:auto; border-radius: 6px; box-shadow: 0 8px 30px rgba(0,0,0,.4); }
+.lb__cap{ color:#eee; font-size:.95rem; text-align:center; max-width: min(92vw, 900px); min-height: 1.2em; }
+.lb__close{
+  position: absolute; top: 12px; right: 12px;
+  background: transparent; border: 2px solid rgba(255,255,255,.7);
+  color:#fff; font-size: 18px; line-height: 1; padding: 6px 10px; border-radius: 6px; cursor:pointer;
+}
+.lb__nav{
+  background: rgba(255,255,255,.12); border: none; color:#fff; cursor: pointer;
+  width: 44px; height: 44px; border-radius: 50%; display:grid; place-items:center;
+  font-size: 24px; user-select:none;
+}
+.lb__nav:hover{ background: rgba(255,255,255,.2); }
+.lb__prev{ position: absolute; left: 12px; }
+.lb__next{ position: absolute; right:12px; }
+@media (max-width: 768px){
+  .lb__img{ max-height: 70vh; }
+  .lb__prev, .lb__next{ top: auto; bottom: 12px; }
+}
+</style>
+
+<script>
+(function(){
+  // Vyber obrázky z Ghost galerie i z běžného obsahu článku
+  const GALLERY_SELECTOR = '.kg-gallery-card';
+  const IMAGE_SELECTOR   = '.kg-gallery-card img, .gh-content img';
+
+  const overlay = document.getElementById('lb');
+  const imgEl   = overlay.querySelector('.lb__img');
+  const capEl   = overlay.querySelector('.lb__cap');
+  const btnClose= overlay.querySelector('.lb__close');
+  const btnPrev = overlay.querySelector('.lb__prev');
+  const btnNext = overlay.querySelector('.lb__next');
+
+  let group = [];     // [{src, alt, cap, el}]
+  let index = 0;
+
+  // Pomocná: vezmi největší URL ze srcsetu (poslední)
+  function largestSrc(img){
+    const ss = img.getAttribute('srcset');
+    if(!ss) return img.currentSrc || img.src;
+    const last = ss.split(',').pop().trim();
+    return last.split(' ')[0];
+  }
+
+  // Vyrob skupinu z nejbližší galerie, jinak jen z jednotlivých obrázků
+  function buildGroup(fromImg){
+    const gallery = fromImg.closest(GALLERY_SELECTOR);
+    const imgs = gallery ? Array.from(gallery.querySelectorAll('img')) 
+                         : [fromImg]; // fallback jediný obrázek
+    return imgs.map(i => {
+      // figcaption, pokud existuje
+      let cap = '';
+      const fig = i.closest('figure');
+      const fc = fig ? fig.querySelector('figcaption') : null;
+      if (fc) cap = fc.textContent.trim();
+      const alt = i.getAttribute('alt') || '';
+      return { src: largestSrc(i), alt, cap, el:i };
+    });
+  }
+
+  function openAt(img){
+    group = buildGroup(img);
+    index = group.findIndex(it => it.el === img);
+    if (index < 0) index = 0;
+    show(index);
+    overlay.classList.add('lb--open');
+    overlay.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function close(){
+    overlay.classList.remove('lb--open');
+    overlay.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  }
+
+  function show(i){
+    if (!group.length) return;
+    index = (i + group.length) % group.length;
+    const it = group[index];
+    imgEl.src = it.src;
+    imgEl.alt = it.alt || '';
+    capEl.textContent = it.cap || it.alt || '';
+  }
+
+  // Ovládání
+  btnClose.addEventListener('click', close);
+  btnPrev.addEventListener('click', () => show(index-1));
+  btnNext.addEventListener('click', () => show(index+1));
+  overlay.addEventListener('click', (e) => {
+    // klik mimo obraz zavře
+    const inside = e.target.closest('.lb__stage') || e.target.closest('.lb__nav') || e.target.closest('.lb__close');
+    if (!inside) close();
+  });
+  window.addEventListener('keydown', (e) => {
+    if (!overlay.classList.contains('lb--open')) return;
+    if (e.key === 'Escape') close();
+    if (e.key === 'ArrowLeft') show(index-1);
+    if (e.key === 'ArrowRight') show(index+1);
+  });
+
+  // Swipe (mobil)
+  let sx = null;
+  overlay.addEventListener('touchstart', (e) => { sx = e.touches[0].clientX; }, {passive:true});
+  overlay.addEventListener('touchend', (e) => {
+    if (sx == null) return;
+    const dx = e.changedTouches[0].clientX - sx;
+    if (Math.abs(dx) > 40) { dx < 0 ? show(index+1) : show(index-1); }
+    sx = null;
+  });
+
+  // Navěs kliky na obrázky (delegace – kdyby se obsah měnil lazy)
+  function bindClicks(root=document){
+    root.querySelectorAll(IMAGE_SELECTOR).forEach(img=>{
+      if (img.dataset.lbBound) return;
+      img.dataset.lbBound = '1';
+      img.style.cursor = 'zoom-in';
+      img.addEventListener('click', (e)=>{ e.preventDefault(); openAt(img); });
+    });
+  }
+  bindClicks();
+
+  // Kdyby Ghost dynamicky dosadil obsah (např. infinite scroll), zavolej bindClicks znovu.
+  // window.addEventListener('gh-content-updated', ()=>bindClicks());
+})();
+</script>
+
+
+<script src="{{asset "built/casper.js"}}"></script>
+<script>
+$(document).ready(function () {
+    // Mobile Menu Trigger
+    $('.gh-burger').click(function () {
+        $('body').toggleClass('gh-head-open');
+    });
+    // FitVids - Makes video embeds responsive
+    $(".gh-content").fitVids();
+}); 
+</script>
+
+{{!-- Ghost outputs required functional scripts with this tag - it should always be the last thing before the closing body tag --}}
+{{ghost_foot}}
+
+<style>
+/* ===== Hlavní rozložení stránky (2 sloupce: úzký vlevo + obsah) ===== */
+
+:root{
+  --left-col-w: 260px;   /* šířka levého pruhu (Traxler + sidebar) */
+  --layout-gap-x: 16px;  /* mezera mezi sloupci */
+}
+
+:root{
+  --page-bg: #f4f9d8; /* smetanová – jemná, ne „křiklavá“ */
+}
+html, body{ background: var(--page-bg); }
+
+
+/* --- sdílené středové plátno pro tag/page/feed --- */
+:root{ --content-max: 980px; --content-narrow: 800px; }
+
+.center-wrap{
+  width: 100%;
+  max-width: var(--content-max);
+  margin: 40px auto 0;
+  padding-inline: clamp(8px, 3vw, 20px);
+  max-width: var(--content-narrow);
+  margin-left: auto;
+  margin-right: auto;   /* ⬅ aby se „narrow“ prvek vždy vycentroval */
+}
+
+
+/* užší varianta – stejně jako detail článku */
+.center-wrap--narrow{ max-width: var(--content-narrow); }
+
+/* embedy/iframe a „min-width:0“ aby nic nepřetékalo */
+.gh-content{ min-width: 0; }
+.gh-content iframe,
+.gh-content .kg-embed-card,
+.gh-content .kg-embed-card iframe{
+  width: 100% !important;
+  max-width: 100% !important;
+  height: auto;
+}
+
+/* feed: nech se roztáhnout na 100% své středové plachty */
+.post-feed{ display:block; }
+.post-feed > .post-card{ width:100%; margin:0 0 20px; }
+
+
+/* Bezpečný box-model & média */
+*, *::before, *::after { box-sizing: border-box; }
+img, video { max-width: 100%; height: auto; display: block; }
+iframe { max-width: 100%; display: block; border: 0; }   /* ⬅ bez height:auto */
+
+
+/* Žádný horizontální scroll od 100vw atd. */
+html { overflow-x: clip; }
+.viewport { width: 100%; }
+
+/* 2-sloupcový řádek */
+.main-container{
+  display: flex;
+  width: 100%;
+  max-width: 100%;
+  gap: var(--layout-gap-x);
+}
+
+/* Levý úzký pruh */
+.left-scrolling-element{
+  flex: 0 0 var(--left-col-w);
+  width: var(--left-col-w);
+}
+
+/* Pravá část = obsah */
+.center-aligned-element{
+  flex: 1 1 auto;
+  min-width: 0;          /* umožní smrštění obsahu bez přetékání */
+}
+.site-content{ width: auto; min-width: 0; }
+
+/* === Vzhled horního boxu (Traxler) v levém pruhu === */
+.Traxler-wrapper{
+  display: block;
+  background: #bdbdbd;
+  border-radius: 5px;
+  padding: 8px;
+  margin-bottom: 8px;
+}
+.Traxler-link{ padding: 5px 5px 0; }
+.Traxler-link a{ color: black; text-decoration: underline; font-weight: 700; }
+.Traxler-photo{
+  display: flex; justify-content: center; padding: 8px;
+}
+.Traxler-photo img{
+  border-radius: 50%;
+  max-width: 140px;       /* drž menší průměr, ať to sedí do úzkého sloupce */
+}
+
+/* Info odkazy pod Traxlerem */
+.Info-links{ margin: 6px 0 10px; }
+.Info-links a{
+  display: inline-block;
+  margin: 2px 4px 0 0;
+  padding: 5px 10px;
+  background-color: #008cba;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  transition: background-color .2s ease-in-out;
+}
+.Info-links a:hover{ background-color: #005b80; }
+
+/* === Responsivita: na mobilu můžeš levý sloupec skrýt === */
+@media (max-width: 768px){
+  .left-scrolling-element{ display: none; }
+  .center-aligned-element{ flex-basis: 100%; }
+}
+
+/* ===== Feed na indexu – necháme 1 sloupec přes celou šířku obsahu ===== */
+.post-feed{ display: block; }
+.post-feed > article.post-card{
+  display: block;
+  width: 100%;
+  max-width: none;
+  margin: 0 0 20px;
+}
+
+
+/* Pagination – vzhled v duchu tvých „zelených“ tlačítek */
+.pagination{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin: 24px 0 8px;
+}
+
+.pagination .page-prev,
+.pagination .page-next{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 10px;
+  background: #179b5b;
+  color: #000;
+  text-decoration: underline;
+  font-weight: 700;
+  border-radius: 5px;
+  transition: background-color .12s ease, box-shadow .12s ease;
+}
+
+.pagination .page-prev:hover,
+.pagination .page-next:hover{
+  background: #18a067;
+  box-shadow: 0 0 0 2px rgba(0,0,0,.06) inset;
+}
+
+.pagination .page-status{
+  font-weight: 700;
+  color: #000;
+}
+
+
+html, body { height: 100%; }
+.viewport{
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+.main-container{ flex: 1 0 auto; }   /* hlavní obsah roztáhne výšku */
+.site-footer{ flex-shrink: 0; }       /* footer zůstane na dně */
+
+</style>
+
+</body>
+</html>

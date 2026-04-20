@@ -1,0 +1,24 @@
+{{!< default}}
+
+<main id="site-main" class="site-main center-wrap">
+  {{#tag}}
+    <header class="tag-hero">
+      <h1 class="tag-title">{{name}}</h1>
+      {{#if description}}<p class="tag-desc">{{description}}</p>{{/if}}
+    </header>
+  {{/tag}}
+
+  <div class="post-feed">
+    {{#foreach posts}}
+      {{> "post-card"}}
+    {{/foreach}}
+  </div>
+
+  {{pagination}}
+</main>
+
+<style>
+  .tag-hero{ margin:0 0 14px; }
+  .tag-title{ margin:0 0 6px; font-size:28px; font-weight:700; }
+  .tag-desc{ margin:0; opacity:.9; }
+</style>

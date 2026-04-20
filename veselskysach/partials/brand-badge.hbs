@@ -1,0 +1,56 @@
+<svg class="brand-badge" viewBox="-40 -40 480 480" role="img">
+  <defs>
+    <!-- Stejné úhly (startOffset), ale delší obvod: r = 176 -->
+    <path id="ring-cw"
+      d="M376,200 a176,176 0 1 1 -352,0 a176,176 0 1 1 352,0"
+      pathLength="360"/>
+    <path id="ring-ccw"
+      d="M376,200 a176,176 0 1 0 -352,0 a176,176 0 1 0 352,0"
+      pathLength="360"/>
+    <clipPath id="clip-center"><circle cx="200" cy="200" r="118"/></clipPath>
+  </defs>
+
+  <!-- Vizuální prstenec -->
+  <circle cx="200" cy="200" r="150" fill="none" stroke="#c87411" stroke-width="60"/>
+  <circle cx="200" cy="200" r="118" fill="#fffbe8"/>
+
+  <!-- Středový znak -->
+  {{#if @custom.badge_center_image}}
+    <image href="{{@custom.badge_center_image}}"
+           x="82" y="82" width="236" height="236"
+           clip-path="url(#clip-center)" preserveAspectRatio="xMidYMid slice"/>
+  {{else}}
+    <image href="{{asset "logo_veseli.svg"}}"
+           x="82" y="82" width="236" height="236"
+           clip-path="url(#clip-center)" preserveAspectRatio="xMidYMid slice"/>
+  {{/if}}
+
+  <!-- Tečky -->
+  <g fill="#fff">
+    <circle cx="350" cy="200" r="6" transform="rotate(227 200 200)"/>
+    <circle cx="350" cy="200" r="6" transform="rotate(353 200 200)"/>
+  </g>
+
+  <!-- Texty -->
+  <text fill="#ffdb46" font-family="Old Standard TT, 'Libre Baskerville', Georgia, serif"
+        font-weight="200" font-size="35" letter-spacing="5" text-transform="uppercase">
+    <textPath href="#ring-cw" startOffset="290" text-anchor="middle">
+      <tspan dy="40">ŠACHOVÝ KLUB</tspan>
+    </textPath>
+  </text>
+
+  <text fill="#ffdb46" font-family="Old Standard TT, 'Libre Baskerville', Georgia, serif"
+        font-weight="200" font-size="35" letter-spacing="5" text-transform="uppercase">
+    <textPath href="#ring-ccw" startOffset="250" text-anchor="middle">
+      <tspan dy="-15">TRAXLER VESELÍ NAD LUŽNICÍ</tspan>
+    </textPath>
+  </text>
+
+  <!-- 1px okraj kolem odznaku -->
+  <circle cx="200" cy="200" r="180" fill="none" stroke="#ffffff" stroke-width="1"/>
+</svg>
+
+<style>
+.brand-badge{ width: clamp(120px, 20vw, 180px); height:auto; display:block; }
+.left-image .brand-badge{ filter: drop-shadow(0 2px 10px rgba(0,0,0,.12)); }
+</style>
